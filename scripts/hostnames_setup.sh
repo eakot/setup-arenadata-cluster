@@ -1,9 +1,8 @@
 #!/bin/bash
 
+echo "${0} is started"
 
-for ip in $(cat $SETUP_ARENA_NODES_LIST); do
-  echo "read $ip from known hosts"
-done
+set -o errexit
 
 HOSTNAMES=$(cat $SETUP_ARENA_HOSTNAMES_TEMP)
 echo 'hostnames:'
@@ -13,23 +12,23 @@ echo $HOSTNAMES
 for ip in $(cat $SETUP_ARENA_NODES_LIST); do
   echo ''
   echo 'setting hostnames in '$ip
+  SETUP_ARENA_HOSTNAMES_REMOTE=./hostnames
+  scp -i $SETUP_ARENA_KEYFILE $SETUP_ARENA_HOSTNAMES_TEMP $SETUP_ARENA_USERNAME@$ip:~/
+  ssh -i $SETUP_ARENA_KEYFILE $SETUP_ARENA_USERNAME@$ip /bin/bash <<EOF
 
-  scp -o StrictHostKeyChecking=accept-new -i ../ssh/id_rsa $SETUP_ARENA_HOSTNAMES_TEMP $SETUP_ARENA_USERNAME@$ip:~/
-  ssh -o StrictHostKeyChecking=accept-new -i ../ssh/id_rsa $SETUP_ARENA_USERNAME@$ip /bin/bash <<EOF
-  echo "SETUP_ARENA_HOSTNAMES_TEMP: $SETUP_ARENA_HOSTNAMES_TEMP"
+  echo "SETUP_ARENA_HOSTNAMES_REMOTE: $SETUP_ARENA_HOSTNAMES_REMOTE"
 
-  echo "SETUP_ARENA_HOSTNAMES_TEMP:"
-  cat $SETUP_ARENA_HOSTNAMES_TEMP
+  cat "$SETUP_ARENA_HOSTNAMES_REMOTE"
 
   echo "/etc/hosts:"
   cat /etc/hosts
 
-  echo "grep -Fxvf /etc/hosts $SETUP_ARENA_HOSTNAMES_TEMP :"
-  grep -Fxvf /etc/hosts $SETUP_ARENA_HOSTNAMES_TEMP
+  echo "grep -Fxvf /etc/hosts $SETUP_ARENA_HOSTNAMES_REMOTE :"
+  grep -Fxvf /etc/hosts "$SETUP_ARENA_HOSTNAMES_REMOTE"
 
-  sudo -- su -c "grep -Fxvf /etc/hosts $SETUP_ARENA_HOSTNAMES_TEMP >> /etc/hosts"
+  sudo -- su -c "grep -Fxvf /etc/hosts $SETUP_ARENA_HOSTNAMES_REMOTE >> /etc/hosts"
   cat /etc/hosts
-
+  rm -rf $SETUP_ARENA_HOSTNAMES_REMOTE
 #  sudo -- su -c "echo $new_hostnames >> /etc/hosts"; cat /etc/hosts
 #  localhost_line="127.0.1.1 $(hostname -f)"
 #  if ! grep '${localhost_line}' /etc/hosts > /dev/null; then

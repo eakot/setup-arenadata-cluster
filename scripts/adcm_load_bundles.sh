@@ -7,7 +7,6 @@ set -o errexit
 echo "${0} is started"
 
 SETUP_ARENA_BUNDLE_LINKS=./conf/bundle_links
-echo $SETUP_ARENA_BUNDLE_LINKS
 
 token_answer=$(curl -d "username=admin&password=admin" -X POST localhost:8000/api/v1/token/)
 token=$(echo $token_answer | jq -r '.token')
@@ -18,7 +17,7 @@ for bundle_link in $(cat $SETUP_ARENA_BUNDLE_LINKS); do
   sudo -- su -c "wget -nc  -P /opt/adcm/download '$bundle_link'"
   filename="${bundle_link##*/}"
   echo "load bundle $filename to adcm"
-  curl -sS --fail -H "Authorization: Token ${token}" -X POST -F bundle_file=$filename localhost:8000/api/v1/stack/load/
+  curl -sS -H "Authorization: Token ${token}" -X POST -F bundle_file=$filename localhost:8000/api/v1/stack/load/
 done
 
 echo "Accepting all bundle licences..."
