@@ -30,4 +30,73 @@ sudo команды не должны требовать пароль
 
 # Сразу после установки
 1. Сменить пароль юзера admin в adcm
-1. 
+
+# Настройка кластера
+1. Добавить хосты
+Hosts (верхнее меню) -> Create host -> Create
+1. Добавить ключи к хостам. Для каждого хоста на странице Hosts:
+Config (шестеренка) -> User, Ssh private key
+1. Clusters -> hadoop_cluster -> Services -> Add service
+Выбрать HDFS, Hive, MySQL, Spark 2, Spark 3, Yarn, Zeppelin, Zookeeper
+Save
+1. Задать пароли к базам
+MySQL -> Configuration -> Save
+Hive -> Configuration -> Save
+1. hadoop_cluster -> Hosts -> Add hosts
+Добавить хосты (если они ещё не привязаны к кластеру)
+1. Раскидать сервисы по хостам
+Hosts - Components -> Хост справа -> Кликаем по сервисам
+
+На главной ноде:
+HDFS Name Node
+Hive Server, Hive metastore
+MeSQL Master server
+Spark History Server
+Zookeeper Server
+MapReduce History Server
+YARN Resource Manager
+Yarn Timeline Server
+HDFS HttpFS server
+
+На второй ноде:
+HDFS Secondary Name Node
+
+На дата нодах:
+HDFS Client, 
+HDFS DateNode, 
+Hive client, 
+Spark client, Spark3 Client
+YARN client, YARN NodeManager
+
+ВМ с цеппелином:
+Zeppelin Server, Spark Client, Spark3 Client
+
+1. Запустить установку.
+Кнопка рядом с hadoop_cluster -> Install
+
+1. Когда упадет HDFS Check, продолжить установку сервисов в ручном режиме по порядку: 
+YARN
+MySQL
+Hive
+Spark, Spark3
+Zeppelin
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

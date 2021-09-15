@@ -15,7 +15,7 @@ for row in $(echo "${providers_json}" | jq -r '.[] | @base64'); do
     echo ${row} | base64 --decode | jq -r ${1}
   }
   provider_id=$(_jq '.id')
-  for host in $(cat nodes_list); do
+  for host in $(cat $SETUP_ARENA_NODES_LIST); do
   echo "provider_id=${provider_id} -F host=${host}"
   curl -H "Authorization: Token ${token}" -X POST -F prototype_id="${provider_id}" -F fqdn="${host}" localhost:8000/api/v1/provider/${provider_id}/host/
   done
