@@ -13,6 +13,7 @@
 Centos 7 на всех нодах. Centos 8 упадет с ошибкой докера -- там ставится podman вместо него
 Юзер с правами sudo и возможностью подключаться по ключу на всех нодах
 sudo команды не должны требовать пароль
+SE Linux отключить (используется папка /opt для загрузки дистрибутивов)
 На неймноде открыть порт 8000 (adcm), 8080 (yarn)
 На ноде для zeppelin открыть 8080
 
@@ -49,6 +50,7 @@ Hosts - Components -> Хост справа -> Кликаем по сервис�
 
 На главной ноде:
 HDFS Name Node
+HDFS Client
 Hive Server, Hive metastore
 MeSQL Master server
 Spark History Server
@@ -62,14 +64,17 @@ HDFS HttpFS server
 HDFS Secondary Name Node
 
 На дата нодах:
-HDFS Client, 
-HDFS DateNode, 
-Hive client, 
+HDFS Client
+HDFS DateNode
+Hive client
 Spark client, Spark3 Client
 YARN client, YARN NodeManager
 
 ВМ с цеппелином:
-Zeppelin Server, Spark Client, Spark3 Client
+HDFS Client
+Zeppelin Server
+Spark Client
+Spark3 Client
 
 1. Запустить установку.
 Кнопка рядом с hadoop_cluster -> Install
