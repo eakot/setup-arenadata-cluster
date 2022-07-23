@@ -14,7 +14,7 @@ echo 'token = '$token
 
 for bundle_link in $(cat $SETUP_ARENA_BUNDLE_LINKS); do
   echo "download $bundle_link"
-  sudo -- su -c "wget -nc  -P --no-check-certificate /opt/adcm/download '$bundle_link'"
+  wget -nc  -P --no-check-certificate /opt/adcm/download '$bundle_link'
   filename="${bundle_link##*/}"
   echo "load bundle $filename to adcm"
   curl -sS -H "Authorization: Token ${token}" -X POST -F bundle_file=$filename localhost:8000/api/v1/stack/load/
